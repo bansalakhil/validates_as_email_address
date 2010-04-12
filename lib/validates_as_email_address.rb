@@ -63,12 +63,19 @@ module ValidatesAsEmailAddress
     format_configuration = configuration.dup
     format_configuration[:message] = configuration.delete(:wrong_format)
     format_configuration[:with] = configuration[:strict] ? RFC1035::EmailAddress : RFC822::EmailAddress
-    validates_format_of attr_names, format_configuration
+    
+    attr_names.each do |attr_name|
+      validates_format_of attr_name, format_configuration
+    end
     
     # Add length validation
     length_configuration = configuration.dup
     length_configuration.reverse_merge!(:within => 3..320) unless ([:minimum, :maximum, :is, :within, :in] & configuration.keys).any?
-    validates_length_of attr_names, length_configuration
+    
+    attr_names.each do |attr_name|
+      validates_length_of attr_name, length_configuration
+    end
+    
   end
 end
 
